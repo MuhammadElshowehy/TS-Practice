@@ -15,19 +15,13 @@ body {
 
 .projects {
   margin: 1rem;
-  border: 1px solid #ff0062;
 }
 
 .projects header {
-  background: #ff0062;
   height: 3.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-#finished-projects {
-  border-color: #0044ff;
 }
 
 #finished-projects header {
