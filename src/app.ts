@@ -1,6 +1,23 @@
+enum ProjectStatus {
+  Active,
+  Finished,
+}
+
+class Project {
+  constructor(
+    public id: string,
+    public title: string,
+    public description: string,
+    public people: number,
+    public status: ProjectStatus
+  ) {}
+}
+
+type Listener = (items: Project[]) => void;
+
 class ProjectState {
-  private projects: any[] = [];
-  private listeners: any[] = [];
+  private projects: Project[] = [];
+  private listeners: Listener[] = [];
   private static instance: ProjectState;
   private constructor() {}
 
@@ -13,17 +30,18 @@ class ProjectState {
     }
   }
 
-  addListener(listenerFn: Function) {
+  addListener(listenerFn: Listener) {
     this.listeners.push(listenerFn);
   }
 
   addProject(title: string, desc: string, numOfPeopleL: number) {
-    const project = {
-      id: Math.random().toString(),
-      title: title,
-      description: desc,
-      people: numOfPeopleL,
-    };
+    const project = new Project(
+      Math.random().toString(),
+      title,
+      desc,
+      numOfPeopleL,
+      ProjectStatus.Active
+    );
     this.projects.push(project);
     for (const listenerFn of this.listeners) {
       listenerFn(this.projects.slice());
@@ -111,7 +129,7 @@ class ProjectList {
   templateElement: HTMLTemplateElement;
   hostElement: HTMLDivElement;
   element: HTMLElement;
-  assignedProjects: any[] = [];
+  assignedProjects: Project[] = [];
 
   constructor(private type: "active" | "finished") {
     this.templateElement = document.getElementById(
@@ -126,8 +144,14 @@ class ProjectList {
     this.element = importedNode.firstElementChild as HTMLFormElement;
     this.element.id = `${this.type}-projects`;
 
-    projectState.addListener((projects: any[]) => {
-      this.assignedProjects = projects;
+    projectState.addListener((projects: Project[]) => {
+      const relevantProjects = projects.filter((prj) => {
+        if (this.type === "active") {
+          return prj.status === ProjectStatus.Active;
+        }
+        return prj.status === ProjectStatus.Finished;
+      });
+      this.assignedProjects = relevantProjects;
       this.renderProjects();
     });
 
@@ -139,6 +163,7 @@ class ProjectList {
     const listEl = document.getElementById(
       `${this.type}-projects-list`
     )! as HTMLUListElement;
+    listEl.innerHTML = "";
     for (let item of this.assignedProjects) {
       const liEl = document.createElement("li");
       liEl.textContent = item.title;
