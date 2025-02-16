@@ -71,3 +71,6 @@ body {
   background: #d6e1ff;
 }
 
+h2 {
+  text-transform: capitalize;
+}

@@ -27,7 +27,7 @@ class ProjectState extends State<Project> {
   private projects: Project[] = [];
   private static instance: ProjectState;
   private constructor() {
-    super()
+    super();
   }
 
   static getInstance() {
@@ -80,7 +80,6 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
       this.element.id = newElementId;
     }
     this.attach(insertAtStart);
-
   }
 
   private attach(insertAtStart: boolean) {
@@ -90,8 +89,8 @@ abstract class Component<T extends HTMLElement, U extends HTMLElement> {
     );
   }
 
-  abstract configure(): void
-  abstract renderContent(): void
+  abstract configure(): void;
+  abstract renderContent(): void;
 }
 
 class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
@@ -100,7 +99,7 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   peopleInputElement: HTMLInputElement;
 
   constructor() {
-    super("project-input", "app", true, "user-input")
+    super("project-input", "app", true, "user-input");
 
     this.titleInputElement = this.element.querySelector(
       "#title"
@@ -154,13 +153,36 @@ class ProjectInput extends Component<HTMLDivElement, HTMLFormElement> {
   renderContent(): void {}
 }
 
+class ProjectItem extends Component<HTMLUListElement, HTMLLIElement> {
+  private project: Project;
+
+  constructor(hostId: string, project: Project) {
+    super("single-project", hostId, false, project.id);
+    this.project = project;
+
+    this.configure();
+    this.renderContent();
+  }
+  configure() {}
+
+  renderContent(): void {
+    this.element.querySelector("h2")!.textContent = this.project.title;
+    this.element.querySelector(
+      "h3"
+    )!.textContent = `people: ${this.project.people.toString()}`;
+    this.element.querySelector(
+      "p"
+    )!.textContent = `description: ${this.project.description}`;
+  }
+}
+
 class ProjectList extends Component<HTMLDivElement, HTMLElement> {
   assignedProjects: Project[] = [];
 
   constructor(private type: "active" | "finished") {
-    super("project-list", "app", false, `${type}-projects`)
-    this.configure()
-    this.renderContent()
+    super("project-list", "app", false, `${type}-projects`);
+    this.configure();
+    this.renderContent();
   }
 
   renderProjects() {
@@ -169,9 +191,7 @@ class ProjectList extends Component<HTMLDivElement, HTMLElement> {
     )! as HTMLUListElement;
     listEl.innerHTML = "";
     for (let item of this.assignedProjects) {
-      const liEl = document.createElement("li");
-      liEl.textContent = item.title;
-      listEl.appendChild(liEl);
+      new ProjectItem(this.element.querySelector("ul")!.id, item);
     }
   }
 
