@@ -43,12 +43,12 @@ body {
 }
 
 .projects li h2 {
-  color: #ff0062;
+  color: #424649;
   margin: 0.5rem 0;
 }
 
 #finished-projects li h2 {
-  color: #0044ff;
+  color: #424649;
 }
 
 .projects li h3 {
@@ -61,11 +61,11 @@ body {
 }
 
 .droppable {
-  background: #ffe3ee;
+  background: rgba(255, 193, 7, 0.25);
 }
 
 #finished-projects .droppable {
-  background: #d6e1ff;
+  background: rgba(255, 193, 7, 0.25);
 }
 
 h2 {
