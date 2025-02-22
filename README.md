@@ -1,2 +1,4 @@
 # TS-Practice
-Drag and drop app using TS
+Simple Drag-and-drop app using TS
+
+Visit: https://muhammadelshowehy.github.io/TS-Practice/
